@@ -1,36 +1,27 @@
-import csv
+import pandas as pd
+import os
 
-# Input and output file paths
-input_csv_path = 'input.csv'
-output_csv_path = 'output.csv'
+# List of CSV files
+csv_files = ['OD.csv', 'RAI.csv', 'arb_CDPs.csv', 'wsteth.csv', 'metacartel', 'camelot', 'jasmine']  # Add more CSVs as needed
 
-# Dictionary to store points for each unique id
-points_dict = {}
+# List to store dataframes
+dfs = [600, 300, 1, 25, 10, 10, 25, 25, 25]
 
-# Read the input CSV file
-with open(input_csv_path, 'r') as input_file:
-    reader = csv.reader(input_file)
-    
-    # Loop through each row in the CSV
-    for row in reader:
-        # Extract id and points from the row
-        unique_id, points = row[0], int(row[1])
-        
-        # Aggregate points for each unique id
-        if unique_id in points_dict:
-            points_dict[unique_id] += points
-        else:
-            points_dict[unique_id] = points
+i = 0
+def assign_points(csv_path):
+    df = pd.read_csv(csv_path, header=None, names=['address'])
+    df['points'] = dfs[i]
+    i = i + 1
+    return df
 
-# Write the aggregated data to a new CSV file
-with open(output_csv_path, 'w', newline='') as output_file:
-    writer = csv.writer(output_file)
-    
-    # Write header
-    writer.writerow(['id', 'points'])
-    
-    # Write aggregated data
-    for unique_id, total_points in points_dict.items():
-        writer.writerow([unique_id, total_points])
+# Concatenate dataframes along the rows
+result_df = pd.concat(dfs, ignore_index=True)
 
-print(f"Aggregated data saved to {output_csv_path}")
+# Group by ID and sum the points
+result_df = result_df.groupby('address')['points'].sum().reset_index()
+
+# Save the result to a new CSV
+output_csv_path = 'Output_CSV.csv'
+result_df.to_csv(output_csv_path, index=False)
+
+print(f"Combined data saved to {output_csv_path}")
