@@ -3,14 +3,19 @@ import os
 from web3 import Web3
 
 # List of CSV files
-csv_files = ['OD.csv', 'RAI.csv', 'cdp-users.csv', 'reth.csv', 'wsteth.csv', 'metacartel.csv', 'camelot.csv', 'jasmine.csv', 'dsentra.csv']  # Add more CSVs as needed
+csv_files = ['OD.csv', 'RAI.csv', 'cdp-users.csv', 'reth.csv', 'wsteth.csv', 'metacartel.csv', 'camelot.csv', 'jasmine.csv', 'dsentra.csv', 'delegators.csv']  # Add more CSVs as needed
 
 # List to store dataframes
-weights = [600, 200, 50, 10, 25, 25, 25, 25, 25]
+weights = [1000, 125, 75, 25, 25, 25, 50, 25, 25, 1]
 print("weights set")
 
+counter = 0
 def calculate_checksum(address):
     w3 = Web3()
+    global counter
+    counter += 1
+    if(counter % 1000 == 0):
+        print(f"Check summed {counter}")
     return w3.to_checksum_address(address)
 
 # Concatenate dataframes along the rows
