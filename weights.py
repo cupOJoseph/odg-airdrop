@@ -1,6 +1,6 @@
 import pandas as pd 
 
-df = pd.read_csv("odg_airdrop.csv")
+df = pd.read_csv("odg_airdrop_unweighted.csv")
 
 total_weight = df.iloc[:,1].sum()
 print(f"total weight {total_weight}")

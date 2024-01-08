@@ -42,7 +42,7 @@ print("checksum complete")
 # Group by 'address' and sum the 'weight' for each group
 aggregated_df = concatenated_df.groupby('address')['weight'].sum().reset_index()
 
-aggregated_df.to_csv("odg_airdrop.csv", index=False)
+aggregated_df.to_csv("odg_airdrop_unweighted.csv", index=False)
 
 print("done")
 # save the first 100 rows to a csv thats easy to open quickly and check stuff
