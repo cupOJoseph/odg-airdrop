@@ -3,34 +3,45 @@ import os
 from web3 import Web3
 
 # List of CSV files
-csv_files = ['OD.csv', 'RAI.csv', 'cdp-users.csv', 'reth.csv', 'wsteth.csv', 'metacartel', 'camelot', 'jasmine', 'dsentra']  # Add more CSVs as needed
+csv_files = ['OD.csv', 'RAI.csv', 'cdp-users.csv', 'reth.csv', 'wsteth.csv', 'metacartel.csv', 'camelot.csv', 'jasmine.csv', 'dsentra.csv']  # Add more CSVs as needed
 
 # List to store dataframes
-dfs = [600, 200, 50, 10, 10, 25, 25, 25, 25]
+weights = [600, 200, 50, 10, 25, 25, 25, 25, 25]
+print("weights set")
 
 def calculate_checksum(address):
     w3 = Web3()
     return w3.to_checksum_address(address)
 
-i = 0
-def assign_points(csv_path):
-    df = pd.read_csv(csv_path, header=None, names=['address'])
-    df['points'] = dfs[i]
-    i = i + 1
-    return df
-
 # Concatenate dataframes along the rows
-result_df = pd.concat(dfs, ignore_index=True)
+concatenated_df = pd.DataFrame(columns=['address'])
 
-# Group by ID and sum the points
-result_df = result_df.groupby('address')['points'].sum().reset_index()
+# Iterate through the list of CSV files and concatenate them
+i = 0
 
-# Save the result to a new CSV
-output_csv_path = 'Output_CSV.csv'
-result_df.to_csv(output_csv_path, index=False)
+for file in csv_files:
+    file_path = os.path.join('lists/', file)  # Replace 'path_to_directory_containing_csv_files' with the actual path
+    df = pd.read_csv(file_path, header=None, names=['address'])
+    df['weight'] = weights[i]
+    i = i + 1
+    concatenated_df = pd.concat([concatenated_df, df], ignore_index=True)
+    print("contatinating...")
+#theres now 1 dataframe with lots of weights and duplicates 
+print("concatenated")
 
-print(f"Combined data saved to {output_csv_path}")
+# Apply the calculate_checksum function to each value in 'column1'
+concatenated_df['address'] = concatenated_df['address'].apply(calculate_checksum)
+print("checksum complete")
 
-# save the first 100 rows to a csv thats easy to open
-result_df.head(100).to_csv("short_test_result100.csv", index=False)
+##remove duplcates and apply weights by adding for each checksummed address
+# Group by 'address' and sum the 'weight' for each group
+aggregated_df = concatenated_df.groupby('address')['weight'].sum().reset_index()
+
+aggregated_df.to_csv("odg_airdrop.csv", index=False)
+
+print("done")
+# save the first 100 rows to a csv thats easy to open quickly and check stuff
+aggregated_df.head(200).to_csv("short_test_result100.csv", index=False)
+
+
 
