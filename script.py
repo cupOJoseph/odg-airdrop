@@ -1,11 +1,16 @@
 import pandas as pd
 import os
+from web3 import Web3
 
 # List of CSV files
-csv_files = ['OD.csv', 'RAI.csv', 'arb_CDPs.csv', 'wsteth.csv', 'metacartel', 'camelot', 'jasmine']  # Add more CSVs as needed
+csv_files = ['OD.csv', 'RAI.csv', 'cdp-users.csv', 'reth.csv', 'wsteth.csv', 'metacartel', 'camelot', 'jasmine', 'dsentra']  # Add more CSVs as needed
 
 # List to store dataframes
-dfs = [600, 300, 1, 25, 10, 10, 25, 25, 25]
+dfs = [600, 200, 50, 10, 10, 25, 25, 25, 25]
+
+def calculate_checksum(address):
+    w3 = Web3()
+    return w3.to_checksum_address(address)
 
 i = 0
 def assign_points(csv_path):
@@ -25,3 +30,7 @@ output_csv_path = 'Output_CSV.csv'
 result_df.to_csv(output_csv_path, index=False)
 
 print(f"Combined data saved to {output_csv_path}")
+
+# save the first 100 rows to a csv thats easy to open
+result_df.head(100).to_csv("short_test_result100.csv", index=False)
+
