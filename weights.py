@@ -1,15 +1,16 @@
 import pandas as pd 
 
-df = pd.read_csv("odg_airdrop_unweighted.csv")
+df = pd.read_csv("odg_airdrop_unweighted.csv", header=0)
 
-total_weight = df.iloc[:,1].sum()
-print(f"total weight {total_weight}")
+total_weight = 923440
 
-multiplier = 300000 / total_weight 
+for i, row in df.iterrows():
+    old_val = row["weight"]
+    df.at[i, 'weight'] = (row["weight"] / total_weight) * 300000 * 10 ** 18
+    if i % 1000 == 0:
+        print(f"calculated {i}. {old_val} now = {df.at[i, 'weight']}")
 
-df["token_amount"] = df.iloc[1, 1] * multiplier
-
-df.iloc[:, [0, 2]].to_csv('final_odg_airdrop.csv', index=False, header=False)
+df.to_csv('final_odg_airdrop.csv', index=False, header=False)
 
 
 
