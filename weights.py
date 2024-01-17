@@ -7,7 +7,7 @@ total_weight = 923440
 
 for i, row in df.iterrows():
     old_val = row["weight"]
-    df.at[i, 'weight'] = Decimal(row["weight"]) / Decimal(total_weight) * Decimal("300000") * Decimal("10") ** 18
+    df.at[i, 'weight'] = Decimal(row["weight"]) / Decimal(total_weight) * Decimal("300000")
     if i % 5000 == 0:
         print(f"calculated {i}. {old_val} now = {df.at[i, 'weight']}")
 
