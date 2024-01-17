@@ -1,5 +1,7 @@
 # ODG Airdrop
 
+
+
 ## Using this repo
 1. List of target groups is psuedo code for who should be included
 2. full.csv is a complete list of addresses that shall be included
